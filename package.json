@@ -1,0 +1,8 @@
+{
+  "name": "document-framework-mintlify",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "PATH=$HOME/.nvm/versions/node/v24.15.0/bin:$PATH mint dev"
+  }
+}

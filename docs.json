@@ -1,0 +1,44 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Document Framework",
+  "description": "A documentation framework built with Mintlify.",
+  "colors": {
+    "primary": "#2563EB"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Overview",
+        "href": "/"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get started",
+      "href": "/document-framework"
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting started",
+        "icon": "play",
+        "pages": [
+          "index",
+          "document-framework"
+        ]
+      },
+      {
+        "group": "Reference",
+        "icon": "book-open",
+        "pages": [
+          "reference/template"
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {}
+  }
+}
