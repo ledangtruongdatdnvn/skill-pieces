@@ -111,7 +111,14 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
 
 **Skill TKCT chuyên dụng**
 
-1. **`tkct-document-builder`:** Điều phối toàn bộ quy trình sinh tài liệu: thu thập metadata, khởi tạo từ file Word mẫu (style donor) để kế thừa định dạng chuẩn, rồi gọi tuần tự các skill thành phần để tạo tài liệu hoàn chỉnh.
+<Note>
+  `tkct-document-builder` là skill trung tâm của bộ TKCT. Trong phần lớn trường
+  hợp, người làm thiết kế chi tiết chỉ cần gọi duy nhất skill này; nó sẽ tự
+  điều phối và lần lượt kích hoạt các skill thành phần phù hợp, nên không cần
+  chỉ định thủ công từng skill bên dưới.
+</Note>
+
+1. **`tkct-document-builder`:** Đóng vai trò điều phối toàn bộ quy trình sinh tài liệu — thu thập metadata, khởi tạo tài liệu từ file Word mẫu (style donor) để kế thừa định dạng chuẩn, sau đó lần lượt gọi các skill thành phần để hoàn thiện tài liệu.
 2. **`tkct-section-assembler`:** Dựng cấu trúc chi tiết cho từng màn hình chức năng theo 4 mục chuẩn (Thông tin chung, Thiết kế màn hình, Mô tả chi tiết thành phần, Luồng nghiệp vụ), đảm bảo nhất quán giữa các màn hình.
 3. **`tkct-style-guide`:** Tự động áp quy chuẩn định dạng Viettel (font Arial, cỡ chữ theo cấp heading, khoảng cách dòng, căn lề, màu chủ đạo, đánh số mục) để tài liệu luôn chuyên nghiệp, đồng bộ.
 4. **`tkct-field-table-generator`:** Từ danh sách trường hoặc mô tả giao diện thô, tự sinh bảng đặc tả chuẩn 6 cột (STT, Tên trường, Kiểu hiển thị, Input/Output, Giá trị mặc định, Mô tả nghiệp vụ & Mapping CSDL).
