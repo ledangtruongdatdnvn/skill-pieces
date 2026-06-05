@@ -607,15 +607,22 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
     lại các skill vừa cài.
   </Accordion>
   <Accordion title="File .docx sai định dạng / font">
-    Đảm bảo có mention `docx` và `tkct-style-guide`, và khởi tạo tài liệu từ
+    Đảm bảo có mention `docx` và `tkct-document-builder`, và khởi tạo tài liệu từ
     file Word mẫu (style donor) để kế thừa định dạng chuẩn Viettel.
+
+    TKCT Skills được xây theo một **template chuẩn**. Nếu template của bạn khác
+    với template chuẩn, Agent có thể bị nhầm lẫn, dẫn đến kết quả chưa ổn định.
+    Khi đó, hãy trao đổi với Agent để **rút ra các quy tắc riêng** cho template
+    của bạn và lưu vào `rules.txt`. Ở những lần sinh tài liệu sau, chủ động
+    mention file `rules.txt` và yêu cầu Agent **ưu tiên các quy tắc đó** — dần
+    dần Agent sẽ bám theo đúng phong cách tài liệu của bạn.
+
   </Accordion>
-  <Accordion title="Bảng đặc tả thiếu cột hoặc thiếu trường">
-    Cung cấp đầy đủ danh sách trường, hoặc dùng kịch bản 7.4 để resolve schema
-    từ CSDL. `tkct-output-validator` sẽ báo các bảng sai số cột/thiếu thông tin.
-  </Accordion>
-  <Accordion title="Không kết nối được CSDL (kịch bản 7.4)">
-    Kiểm tra file `.env` môi trường, đảm bảo dùng user CSDL **chỉ đọc** và CSDL
-    đang chạy. Không paste thông tin kết nối trực tiếp vào prompt.
+  <Accordion title="Không kết nối được CSDL">
+    Trước tiên, tự kiểm tra máy tính có kết nối được CSDL hay không bằng một
+    công cụ khác (MySQL Workbench, DBeaver, `mysql` CLI…) với đúng thông tin
+    trong file `.env`. Nếu các công cụ này cũng không kết nối được thì vấn đề
+    nằm ở mạng/CSDL, không phải ở skill. Đảm bảo dùng user CSDL **chỉ đọc** và
+    CSDL đang chạy. Không paste thông tin kết nối trực tiếp vào prompt.
   </Accordion>
 </AccordionGroup>
