@@ -1,0 +1,471 @@
+---
+title: "VTS Skills"
+description: "Hướng dẫn sử dụng bộ VTS Skills để sinh tài liệu bằng AI"
+---
+
+# VTS Skills
+
+Trang này hướng dẫn người dùng (BA và các vai trò liên quan) sử dụng bộ **VTS Skills** để tạo tài liệu chuẩn Viettel bằng các công cụ AI như Claude, Codex, Antigravity, Cursor.
+
+VTS Skills không chỉ dành riêng cho tài liệu thiết kế chi tiết — một số skill có thể tái sử dụng cho nhiều loại tài liệu khác nhau tùy theo mục đích (như `drawio`, `docx`) và sẽ còn tiếp tục mở rộng trong tương lai. Bộ skill bao gồm cả các **skill dùng chung** lẫn các **skill dùng riêng** đặc thù cho từng loại tài liệu.
+
+## 1. Đối tượng sử dụng
+
+- **Business Analyst (BA)** — người soạn thảo và sở hữu nội dung tài liệu.
+- **Quản lý dự án** — người rà soát cấu trúc và chất lượng tài liệu đầu ra.
+
+## 2. Lõi của file DOCX là gì?
+
+Word `.docx` thực chất là một thư mục nén dạng ZIP chứa các file XML và hình ảnh. Khi giải nén, cấu trúc chính bao gồm:
+
+- `document.xml`: Chứa toàn bộ chữ, bảng đặc tả và bố cục của tài liệu.
+- `styles.xml`: Lưu thông tin định dạng (font chữ, cỡ chữ, màu sắc, tiêu đề Heading).
+- `media/`: Thư mục lưu hình ảnh đính kèm (ảnh chụp màn hình, sơ đồ quy trình).
+- `comments.xml`: Nơi lưu trữ các nhận xét (comment) của người dùng.
+
+<Note>
+  **VTS Skills hoạt động thế nào?** AI tự động giải nén, đọc/ghi thông tin trực
+  tiếp vào các file XML này để chèn nội dung, định dạng văn bản hoặc thêm bình
+  luận, sau đó đóng gói lại thành file `.docx` hoàn chỉnh mà không làm hỏng
+  file.
+</Note>
+
+## 3. Công cụ AI trong hệ thống
+
+Hiểu một cách đơn giản, **Claude**, **Codex**, **Antigravity** và **Cursor** đều là những "người soạn thảo" sử dụng các **Skill** để chuyển hóa yêu cầu của bạn thành văn bản Word theo yêu cầu.
+
+<CardGroup cols={2}>
+  <Card title="Claude" icon="robot" href="https://claude.ai/download">
+    Tải bản dành cho máy tính tại claude.ai/download.
+  </Card>
+  <Card
+    title="Codex (ChatGPT)"
+    icon="terminal"
+    href="https://chatgpt.com/download"
+  >
+    Tải bản dành cho máy tính tại chatgpt.com/download.
+  </Card>
+  <Card title="Antigravity" icon="rocket" href="https://antigravity.google">
+    Tải bản dành cho máy tính tại antigravity.google.
+  </Card>
+  <Card title="Cursor" icon="code" href="https://cursor.com">
+    Tải bản dành cho máy tính tại cursor.com.
+  </Card>
+</CardGroup>
+
+## 4. Khái niệm "Skill" là gì?
+
+Trong Agentic AI, **Skill (Kỹ năng)** là một bộ **công cụ** và **chỉ dẫn** được đóng gói sẵn để giải quyết một tác vụ cụ thể. Thay vì yêu cầu AI viết chung chung, ta cung cấp các Skill chuyên biệt:
+
+- **Chỉ dẫn nghiệp vụ:** AI phải viết theo văn phong nào, dùng từ ngữ gì.
+- **Tài liệu tham khảo:** Các template mẫu, quy chuẩn viết tài liệu (Style Guide).
+- **Công cụ tự động hóa:** Các đoạn mã giúp AI tự động tính toán, vẽ sơ đồ.
+
+### Cài đặt Skill: Project hay Global?
+
+Mỗi Skill là một thư mục chứa file `SKILL.md` (chỉ dẫn) và các tài nguyên đi kèm. Có hai phạm vi cài đặt:
+
+- **Project (theo dự án):** Chỉ áp dụng cho dự án đó.
+- **Global (toàn máy):** Áp dụng cho mọi dự án trên máy.
+
+`SKILL.md` là chuẩn dùng chung — một skill viết cho Claude có thể dùng lại ở các công cụ khác mà không cần sửa. Chỉ khác nhau ở thư mục đặt skill:
+
+| Công cụ         | Cài Project (trong dự án)     | Cài Global (Home máy người dùng)            |
+| --------------- | ----------------------------- | ------------------------------------------- |
+| **Claude**      | `.claude/skills/<tên-skill>/` | `~/.claude/skills/<tên-skill>/`             |
+| **Codex**       | `.agents/skills/<tên-skill>/` | `~/.codex/skills/<tên-skill>/`              |
+| **Antigravity** | `.agent/skills/<tên-skill>/`  | `~/.gemini/antigravity/skills/<tên-skill>/` |
+| **Cursor**      | `.cursor/skills/<tên-skill>/` | `~/.cursor/skills/<tên-skill>/`             |
+
+<Note>
+  **Thư mục dùng chung cho nhiều tool:** vì `SKILL.md` là chuẩn mở "Agent
+  Skills", nhiều công cụ (Codex, Cursor, Gemini CLI…) còn cùng đọc thư mục trung
+  lập `.agents/skills/` (project) và `~/.agents/skills/` (global). Đặt skill một
+  lần ở đây là dùng được cho nhiều tool, khỏi chép vào từng thư mục riêng. Ngoài
+  ra Cursor còn tự đọc luôn thư mục của Claude/Codex (`.claude/skills/`,
+  `.codex/skills/`, `~/.claude/skills/`, `~/.codex/skills/`).
+</Note>
+
+### Cách mention (gọi) Skill cho từng công cụ
+
+AI sẽ **tự kích hoạt** skill khi yêu cầu của bạn khớp mô tả skill. Để chắc chắn gọi đúng skill, hãy gọi tên skill trực tiếp trong prompt:
+
+| Công cụ         | Cách gọi skill thủ công                                                 |
+| --------------- | ----------------------------------------------------------------------- |
+| **Claude**      | Gõ `/tên-skill` (ví dụ `/tkct-docx`)                                    |
+| **Codex**       | Gõ `$tên-skill` (ví dụ `$tkct-docx`), hoặc dùng bộ chọn `/skills`       |
+| **Antigravity** | Nhắc tên skill trong prompt, hoặc chọn từ danh sách skill của workspace |
+| **Cursor**      | Nhắc tên skill trong chat (skill tự kích hoạt theo mô tả)               |
+
+<Note>
+  Ở Codex và Cursor, ký tự **`@`** dùng để chèn _file_ làm ngữ cảnh, **không
+  phải** để gọi skill.
+</Note>
+
+## 5. Bộ 10 VTS TKCT Skills giải quyết việc gì?
+
+Vai trò của từng Skill:
+
+1. **`tkct-docx` (Kỹ sư Word):** Can thiệp trực tiếp vào lõi XML của file Word (giải nén ZIP, thao tác trên các file `document.xml`, `styles.xml`, `comments.xml` và thư mục `media/`) để chỉnh sửa, định dạng cấu trúc và đóng gói thành file `.docx`. Đặc biệt, khi được mention trên các công cụ soạn thảo (Claude, Codex), skill này có khả năng đọc bất kỳ file Word nào và viết nội dung mới kế thừa chính xác style định dạng của file Word đó.
+2. **`tkct-document-builder` (Người điều phối):** Đóng vai trò người điều phối quy trình sinh tài liệu hoàn chỉnh. Skill này thu thập metadata, khởi tạo tài liệu từ một file Word mẫu (style donor) để kế thừa định dạng chuẩn, sau đó tự động kích hoạt và phối hợp tuần tự các skill thành phần khác để tạo tài liệu thiết kế chi tiết hoàn chỉnh.
+3. **`tkct-section-assembler` (Người lắp ráp):** Đảm nhận việc dựng cấu trúc chi tiết cho từng màn hình chức năng. Skill này tự động phân chia và sắp xếp nội dung theo đúng cấu trúc tiêu chuẩn gồm 4 mục chính (Thông tin chung, Thiết kế màn hình, Mô tả chi tiết các thành phần/trường thông tin, và Luồng nghiệp vụ tương ứng), đảm bảo tính nhất quán giữa tất cả các màn hình trong tài liệu.
+4. **`tkct-style-guide` (Người canh chuẩn định dạng):** Đóng vai trò giám sát quy chuẩn trình bày. Skill này tự động áp dụng các bộ quy tắc định dạng của Viettel (như font chữ Arial, cỡ chữ tiêu chuẩn cho từng cấp Heading, khoảng cách dòng, căn lề, màu sắc chủ đạo và cách đánh số mục tự động) để tài liệu xuất ra luôn chuyên nghiệp và đồng bộ mà không cần chỉnh sửa thủ công.
+5. **`tkct-field-table-generator` (Người vẽ bảng đặc tả):** Tự động hóa việc sinh bảng đặc tả giao diện chi tiết. Từ danh sách trường hoặc mô tả giao diện thô, skill này tự động sinh ra bảng mô tả chuẩn 6 cột (STT, Tên trường dữ liệu, Kiểu hiển thị, Trạng thái Input/Output, Giá trị mặc định, Mô tả nghiệp vụ & Mapping CSDL), giúp loại bỏ hoàn toàn việc kẻ bảng và điền dữ liệu thủ công.
+6. **`tkct-data-governance` (Người quản trị dữ liệu):** Đảm bảo tính chính xác và nhất quán của dữ liệu hệ thống. Skill này phân tích cấu trúc bảng (schema), các mối quan hệ khóa ngoại (foreign key) và định nghĩa các quy tắc ràng buộc dữ liệu (data constraints). Từ đó, tự động sinh phần đặc tả quản trị dữ liệu phục vụ cho lập trình viên và kiểm thử viên.
+7. **`tkct-workflow-writer` (Người viết luồng):** Chuyển hóa logic nghiệp vụ phức tạp thành các bước xử lý cụ thể, rõ ràng. Skill này tự động mô tả chi tiết các luồng xử lý (luồng chuẩn - Happy Path, luồng rẽ nhánh, luồng xử lý lỗi) cho các tác vụ như Thêm mới, Sửa, Xóa, Phê duyệt... giúp giảm thiểu hiểu lầm giữa BA và Lập trình viên.
+8. **`tkct-flowchart-generator` (Người vẽ lưu đồ):** Tự động chuyển đổi các mô tả luồng nghiệp vụ dạng văn bản thành lưu đồ (Flowchart), sau đó biên dịch thành hình ảnh để chèn trực tiếp vào tài liệu Word tại đúng mục tương ứng.
+9. **`tkct-context-diagram` (Người vẽ sơ đồ ngữ cảnh):** Vẽ sơ đồ ngữ cảnh (Context Diagram) mô tả bức tranh tổng quan về luồng trao đổi thông tin. Skill này trực quan hóa các mối quan hệ tương tác giữa Người dùng (Actor), Giao diện hệ thống (UI Frontend), Nghiệp vụ xử lý (Backend API) và Cơ sở dữ liệu (Database) để người đọc dễ dàng hình dung kiến trúc chức năng.
+10. **`tkct-output-validator` (Người kiểm soát chất lượng):** Trước khi xuất file `.docx`, skill này tự động rà soát toàn bộ nội dung tài liệu để phát hiện các lỗi phổ biến (như thiếu mục bắt buộc, bảng đặc tả sai số cột/thiếu thông tin, sai định dạng style, hoặc các liên kết sơ đồ bị lỗi), đảm bảo tài liệu đầu ra đạt độ hoàn thiện cao nhất.
+
+## 6. Quy trình sử dụng cơ bản
+
+<Steps>
+  <Step title="Cài đặt công cụ AI và Skills">
+    Tải một trong các công cụ AI (Claude, Codex, Antigravity, Cursor) và đặt bộ
+    VTS TKCT Skills vào thư mục skill tương ứng (Project hoặc Global) như mục 4.
+  </Step>
+  <Step title="Chuẩn bị đầu vào">
+    Tập hợp thông tin tài liệu (metadata, phân hệ), danh sách đối tượng dữ liệu,
+    danh sách trường (hoặc thông tin kết nối CSDL), và ảnh màn hình.
+  </Step>
+  <Step title="Chọn kịch bản và ra lệnh">
+    Chọn 1 trong 4 kịch bản ở mục 7, mention các skill cần dùng (`[Tkct Docx]`,
+    `[Tkct Document Builder]`…) và dán prompt kèm dữ liệu.
+  </Step>
+  <Step title="Nhận và kiểm tra file .docx">
+    AI sinh file Word hoàn chỉnh. `tkct-output-validator` tự rà soát; bạn mở
+    file để đối chiếu nội dung và định dạng.
+  </Step>
+</Steps>
+
+## 7. Demo: 4 kịch bản sử dụng
+
+Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài liệu theo nhu cầu.
+
+<AccordionGroup>
+  <Accordion title="7.1. Full Document — Sinh tài liệu hoàn chỉnh">
+    - **Khi nào dùng:** Cần tạo mới toàn bộ tài liệu TKCT cho một phân hệ từ con số 0.
+    - **Cách dùng:** Điền thông tin chung (tên tài liệu, phân hệ, giới thiệu dự án, danh sách các đối tượng dữ liệu). AI sẽ tự động sinh toàn bộ trang bìa, changelog, trang ký tên và tất cả các mục chức năng chi tiết trong một file Word duy nhất.
+
+    ````markdown
+    # Tài liệu TKCT hoàn chỉnh (3 đối tượng, field do BA cung cấp)
+
+    ## Prompt
+
+    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu với các thông tin sau:
+
+    ### Thông tin tài liệu
+
+    | Trường          | Giá trị                                                              |
+    | --------------- | -------------------------------------------------------------------- |
+    | Tên tài liệu    | Phần mềm CSDL Nền tảng về kết cấu hạ tầng giao thông của Bộ Xây dựng |
+    | Mã tài liệu     | TKCT_GPCP_CQDT_BXD_CSDLNT_250611_v1.0                                |
+    | Phiên bản       | 1.0                                                                  |
+    | Ngày tạo        | 14/01/2026                                                           |
+    | Đơn vị          | Tổng Công ty Giải pháp Doanh nghiệp Viettel                          |
+    | Người lập       | Nguyễn Văn A                                                         |
+    | Người xem xét 1 | Trần Thị B                                                           |
+    | Người xem xét 2 | Lê Văn C                                                             |
+    | Người phê duyệt | Phạm Thị D                                                           |
+
+    ### Phân hệ
+
+    | Trường           | Giá trị                             |
+    | ---------------- | ----------------------------------- |
+    | Tên phân hệ      | Phân hệ Biên tập, chỉnh lý dữ liệu  |
+    | Menu gốc         | Biên tập, chỉnh lý dữ liệu Đường bộ |
+    | Vai trò mặc định | Cán bộ quản lý                      |
+
+    ### Danh sách đối tượng dữ liệu
+
+    Mỗi dòng = một đối tượng cần tạo section Sửa + Xóa:
+
+    | STT | Tên đối tượng  | Tên bảng DB    | Menu con       | Bảng lookup                            |
+    | --- | -------------- | -------------- | -------------- | -------------------------------------- |
+    | 1   | Tuyến đường bộ | T_TuyenDuongBo | Tuyến đường bộ | T_LoaiDuong, T_TinhThanh               |
+    | 2   | Cầu đường bộ   | T_CauDuongBo   | Cầu đường bộ   | T_LoaiCau, T_TinhThanh, T_TuyenDuongBo |
+    | 3   | Hầm đường bộ   | T_HamDuongBo   | Hầm đường bộ   | T_LoaiHam, T_TinhThanh, T_TuyenDuongBo |
+
+    ### Danh sách trường cho từng đối tượng
+
+    #### Tuyến đường bộ
+
+    | STT | Tên trường       | Tên hiển thị         | Kiểu dữ liệu      | Bắt buộc | Lookup table |
+    | --- | ---------------- | -------------------- | ----------------- | -------- | ------------ |
+    | 1   | MaTuyenDuongBo   | Mã tuyến đường bộ    | Textbox           | Y        | —            |
+    | 2   | TenTuyenDuongBo  | Tên tuyến đường bộ   | Textbox           | Y        | —            |
+    | 3   | LoaiDuongId      | Loại đường           | Combobox          | Y        | T_LoaiDuong  |
+    | 4   | TinhThanhId      | Tỉnh/Thành           | Combobox          | Y        | T_TinhThanh  |
+    | 5   | ChieuDai         | Chiều dài (km)       | Textbox (số thực) | N        | —            |
+    | 6   | NgayDuaVaoSuDung | Ngày đưa vào sử dụng | Datepicker        | N        | —            |
+
+    (Cung cấp tương tự cho Cầu đường bộ, Hầm đường bộ.)
+
+    ### Lịch sử thay đổi
+
+    | Phiên bản | Ngày       | Loại | Mô tả thay đổi   | Người thực hiện |
+    | --------- | ---------- | ---- | ---------------- | --------------- |
+    | 1.0       | 14/01/2026 | A    | Tạo mới tài liệu | Nguyễn Văn A    |
+
+    _(A = Tạo mới, M = Sửa đổi, D = Xóa bỏ)_
+
+    ### Ảnh màn hình
+
+    Cung cấp đường dẫn ảnh cho H6 `Màn hình` của từng đối tượng (Sửa + Xóa).
+
+    Tạo tài liệu TKCT hoàn chỉnh bao gồm:
+
+    1. Trang bìa với đầy đủ thông tin metadata
+    2. Bảng lịch sử thay đổi (7 cột)
+    3. Trang chữ ký (4 vai trò)
+    4. Mục lục placeholder
+    5. Sơ đồ cho từng đối tượng: sơ đồ ngữ cảnh và lưu đồ quy trình
+    6. Tất cả sections Sửa + Xóa cho từng đối tượng (Thông tin chung chức năng, Màn hình, Mô tả chi tiết các thành phần, Luồng nghiệp vụ/Luồng dữ liệu)
+    ````
+
+    **Demo: Sinh tài liệu TKCT hoàn chỉnh**
+
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed/nJm4-QV3X34"
+      title="Sinh tài liệu TKCT hoàn chỉnh"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+
+  </Accordion>
+
+  <Accordion title="7.2. Data Object — Sinh nội dung cho một đối tượng">
+    - **Khi nào dùng:** Tài liệu đã có sẵn, bạn chỉ muốn tạo thêm chi tiết cho một đối tượng dữ liệu (gồm cả hai chức năng **Sửa** và **Xóa**).
+    - **Cách dùng:** Cung cấp thông tin đối tượng (ví dụ: _Bến phà đường bộ_) và danh sách trường. AI sẽ tạo đầy đủ sơ đồ ngữ cảnh, sơ đồ quy trình, bảng đặc tả trường UI và các bước nghiệp vụ cho cả 2 chức năng Sửa/Xóa.
+
+    ````markdown
+    # Bến phà đường bộ (1 đối tượng, Sửa + Xóa)
+
+    ## Prompt
+
+    Tôi cần tạo đầy đủ nội dung cho đối tượng dữ liệu **Bến phà đường bộ** trong tài liệu TKCT, bao gồm cả section Sửa và Xóa. Hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
+
+    **Thông tin đối tượng:**
+
+    - Tên đối tượng: `Bến phà đường bộ`
+    - Tên bảng DB chính: `T_BenPhaDuongBo`
+    - Menu điều hướng: `Biên tập, chỉnh lý dữ liệu Đường bộ → Bến phà đường bộ`
+    - Vai trò người dùng: `Cán bộ quản lý`
+    - Trường định danh chính: `MaDinhDanh`
+    - Tên hiển thị định danh: `Mã bến phà đường bộ`
+    - Tên phân hệ: `Phân hệ Biên tập, chỉnh lý dữ liệu`
+
+    **Bảng lookup liên quan:**
+
+    - `C_LoaiBenPhaDuongBo` — Loại bến phà đường bộ
+    - `C_CapKyThuatBenPha` — Cấp kỹ thuật bến phà
+    - `C_TinhThanh` — Tỉnh/Thành phố
+    - `C_TinhTrangHoatDong` — Tình trạng hoạt động
+    - `T_TuyenDuongBo` — Tuyến đường bộ
+
+    **Danh sách trường của form Sửa:**
+
+    | STT | Tên trường                        | Tên hiển thị         | Kiểu dữ liệu        | Bắt buộc | Lookup table        |
+    | --- | --------------------------------- | -------------------- | ------------------- | -------- | ------------------- |
+    | 1   | MaDinhDanh                        | Mã bến phà đường bộ  | Textbox             | Y        | —                   |
+    | 2   | TenGoi                            | Tên bến phà đường bộ | Textbox             | Y        | —                   |
+    | 3   | LoaiBenPhaDuongBo.TenMuc          | Loại bến phà         | Combobox            | N        | C_LoaiBenPhaDuongBo |
+    | 4   | CapKyThuatBenPha.TenMuc           | Cấp kỹ thuật         | Combobox            | N        | C_CapKyThuatBenPha  |
+    | 5   | DiaPhanHanhChinh.TinhThanh.TenMuc | Tỉnh/Thành phố       | Combobox            | Y        | C_TinhThanh         |
+    | 6   | TinhTrangHoatDong.TenMuc          | Tình trạng hoạt động | Combobox            | Y        | C_TinhTrangHoatDong |
+    | 7   | TuyenDuongBo.TenGoi               | Tuyến đường bộ       | Combobox            | N        | T_TuyenDuongBo      |
+    | 8   | KenhSongDuongThuy                 | Kênh sông đường thủy | Textbox             | N        | —                   |
+    | 9   | NgayXayDung                       | Ngày xây dựng        | Datepicker          | N        | —                   |
+    | 10  | NgayKhaiThac                      | Ngày khai thác       | Datepicker          | N        | —                   |
+    | 11  | SoLuongPhaToiDa                   | Số lượng phà tối đa  | Textbox (số nguyên) | N        | —                   |
+    | 12  | ChieuDaiBen                       | Chiều dài bến (m)    | Textbox (số thực)   | N        | —                   |
+
+    ### Ảnh màn hình
+
+    - Sửa: `screens/Benphaduongbo-Sua-screen-1.png`, `screens/Benphaduongbo-Sua-screen-2.png`, `screens/Benphaduongbo-Sua-screen-3.png`
+    - Xóa: `screens/Benphaduongbo-Xoa-screen-1.png`, `screens/Benphaduongbo-Xoa-screen-2.png`
+
+    Tạo đầy đủ:
+
+    1. **Sơ đồ ngữ cảnh** cho `Bến phà đường bộ` với actor `Cán bộ quản lý` và các thao tác Sửa, Xóa.
+    2. **Section Sửa** — H5 `Sửa dữ liệu bến phà đường bộ`, 4 H6: Thông tin chung chức năng, Màn hình, Mô tả chi tiết các thành phần (bảng 6 cột), Luồng nghiệp vụ (5 Bước).
+    3. **Section Xóa** — H5 `Xóa dữ liệu bến phà đường bộ`, 4 H6: Thông tin chung chức năng, Màn hình, Mô tả chi tiết các thành phần (bảng popup 5 dòng), Luồng dữ liệu (4 Bước + flowchart).
+    ````
+
+    **Demo: Sinh nội dung cho một đối tượng dữ liệu**
+
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed/OuyP1Gf08jI"
+      title="Sinh nội dung cho một đối tượng dữ liệu"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+
+  </Accordion>
+
+  <Accordion title="7.3. Section — Sinh một chức năng đơn lẻ">
+    - **Khi nào dùng:** Chỉ muốn viết thiết kế chi tiết cho một chức năng duy nhất (chỉ riêng Sửa hoặc chỉ riêng Xóa) để bổ sung vào tài liệu.
+    - **Cách dùng:** Khai báo đối tượng và chọn loại thao tác. AI sẽ sinh đúng cấu trúc 4 mục H6 tiêu chuẩn của riêng chức năng đó.
+
+    ````markdown
+    # Sửa Nút giao đường bộ (1 section)
+
+    ## Prompt
+
+    Tôi cần tạo section **Sửa** cho đối tượng dữ liệu **Nút giao đường bộ** trong tài liệu TKCT. Hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
+
+    **Thông tin đối tượng:**
+
+    - Tên đối tượng: `Nút giao đường bộ`
+    - Tên bảng DB: `T_NutGiaoDuongBo`
+    - Menu điều hướng: `Biên tập, chỉnh lý dữ liệu Đường bộ → Nút giao đường bộ`
+    - Vai trò người dùng: `Cán bộ quản lý`
+    - Trường định danh: `MaDinhDanh`
+    - Tên hiển thị định danh: `Mã nút giao đường bộ`
+    - Loại thao tác: **Sửa**
+
+    **Danh sách trường:**
+
+    | STT | Tên trường                        | Tên hiển thị            | Kiểu dữ liệu | Bắt buộc | Lookup table        |
+    | --- | --------------------------------- | ----------------------- | ------------ | -------- | ------------------- |
+    | 1   | MaDinhDanh                        | Mã nút giao đường bộ    | Textbox      | Y        | —                   |
+    | 2   | TenGoi                            | Tên nút giao đường bộ   | Textbox      | Y        | —                   |
+    | 3   | LoaiNutGiao.TenMuc                | Loại nút giao           | Combobox     | N        | C_LoaiNutGiao       |
+    | 4   | HinhDangNutGiao.TenMuc            | Hình dạng nút giao      | Combobox     | N        | C_HinhDangNutGiao   |
+    | 5   | DiaPhanHanhChinh.TinhThanh.TenMuc | Tỉnh/Thành phố          | Combobox     | Y        | C_TinhThanh         |
+    | 6   | TinhTrangHoatDong.TenMuc          | Tình trạng hoạt động    | Combobox     | Y        | C_TinhTrangHoatDong |
+    | 7   | DenTinHieuGiaoThong               | Đèn tín hiệu giao thông | Checkbox     | N        | —                   |
+
+    **Bảng lookup liên quan:** `C_LoaiNutGiao`, `C_HinhDangNutGiao`, `C_TinhThanh`, `C_TinhTrangHoatDong`
+
+    ### Ảnh màn hình
+
+    - Sửa: `screens/Nutgiaoduongbo-Sua-screen-1.png` … `screens/Nutgiaoduongbo-Sua-screen-5.png`
+
+    Tạo đầy đủ section này:
+
+    1. H5 heading `Sửa dữ liệu nút giao đường bộ` (không numeric prefix)
+    2. H6 `Thông tin chung chức năng` (vai trò + đường dẫn menu, 2 đoạn)
+    3. H6 `Màn hình` (placeholder ảnh)
+    4. H6 `Mô tả chi tiết các thành phần` (bảng 6 cột chuẩn TKCT)
+    5. H6 `Luồng nghiệp vụ` (5 Bước)
+    ````
+
+    **Demo: Sinh một chức năng đơn lẻ**
+
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed/TziKNB_jkzE"
+      title="Sinh một chức năng đơn lẻ"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+
+  </Accordion>
+
+  <Accordion title="7.4. Full Document from DB — Sinh tài liệu tự động từ CSDL">
+    - **Khi nào dùng:** Trường hợp bạn **không có danh sách trường** và không muốn nhập thủ công.
+    - **Cách dùng:** Cung cấp thông tin kết nối CSDL và danh sách các bảng (ví dụ: `T_TuyenDuongBo`). AI sẽ tự động kết nối vào DB (quyền chỉ đọc), đọc cấu trúc bảng, xác định loại dữ liệu (Textbox, Combobox, Datepicker...) và tự động điền bảng đặc tả trường cho tài liệu.
+
+    ````markdown
+    # Tài liệu TKCT hoàn chỉnh (10 đối tượng, field resolve từ DB)
+
+    ## Prompt
+
+    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu.
+
+    ### Danh sách đối tượng dữ liệu
+
+    | STT | Tên đối tượng                 | Tên bảng DB                | Menu con                      | Bảng lookup   |
+    | --- | ----------------------------- | -------------------------- | ----------------------------- | ------------- |
+    | 1   | Tuyến đường bộ                | T_TuyenDuongBo             | Tuyến đường bộ                | Resolve từ DB |
+    | 2   | Cầu đường bộ                  | T_CauDuongBo               | Cầu đường bộ                  | Resolve từ DB |
+    | …   | …                             | …                          | …                             | …             |
+    | 10  | Bến xe đường bộ               | T_BenXeDuongBo             | Bến xe đường bộ               | Resolve từ DB |
+
+    ### Nguồn schema CSDL
+
+    Không cung cấp danh sách trường trong input này. Agent phải tự lấy schema theo tên bảng từ CSDL mẫu:
+
+    | Trường             | Giá trị                                        |
+    | ------------------ | ---------------------------------------------- |
+    | Loại CSDL          | MySQL 8 Docker                                 |
+    | File môi trường    | `eval-cases/schema-from-db/mysql/.env`         |
+    | File schema đầu ra | `resolved-schema.md`                           |
+    | Danh sách bảng     | `T_TuyenDuongBo`, `T_CauDuongBo`, … (10 bảng)  |
+
+    Trước khi sinh tài liệu, agent phải resolve schema CSDL bằng file `.env` và xuất ra `resolved-schema.md`. Nội dung cấu hình kết nối không được paste vào prompt/output; agent chỉ dùng user CSDL chỉ đọc khi truy vấn schema.
+
+    Sau đó agent đọc `resolved-schema.md` và dùng các cột/description lấy từ CSDL làm nguồn dữ liệu chuẩn cho:
+
+    - Bảng `Mô tả chi tiết các thành phần`
+    - Mapping `TableName.ColumnName`
+    - Bảng lookup / D-box trong flowchart
+    - Luồng nghiệp vụ / Luồng dữ liệu nhắc tới CSDL
+
+    ### Yêu cầu
+
+    - Schema trường cho 10 đối tượng được resolve từ MySQL bằng resolver CSDL trước khi sinh tài liệu.
+    - Schema resolver dùng user CSDL chỉ đọc lấy từ file môi trường local.
+    - Bảng mô tả trường giữ nguyên mapping `TableName.ColumnName` (ví dụ `T_TuyenDuongBo.TenGoi`).
+    - Số lượng trường trong mỗi bảng output khớp với metadata CSDL, không rút gọn.
+    ````
+
+    **Demo: Sinh tài liệu tự động từ Cơ sở Dữ liệu**
+
+    <iframe
+      width="100%"
+      height="400"
+      src="https://www.youtube.com/embed/R00dlxJGZPo"
+      title="Sinh tài liệu tự động từ Cơ sở Dữ liệu"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+
+  </Accordion>
+</AccordionGroup>
+
+## 8. Xử lý sự cố thường gặp
+
+<AccordionGroup>
+  <Accordion title="AI không kích hoạt đúng skill">
+    Gọi tên skill trực tiếp trong prompt theo cú pháp của từng công cụ
+    (`/tên-skill` cho Claude, `$tên-skill` cho Codex). Kiểm tra skill đã nằm
+    đúng thư mục Project/Global chưa.
+  </Accordion>
+  <Accordion title="File .docx sai định dạng / font">
+    Đảm bảo có mention `tkct-docx` và `tkct-style-guide`, và khởi tạo tài liệu
+    từ file Word mẫu (style donor) để kế thừa định dạng chuẩn Viettel.
+  </Accordion>
+  <Accordion title="Bảng đặc tả thiếu cột hoặc thiếu trường">
+    Cung cấp đầy đủ danh sách trường, hoặc dùng kịch bản 7.4 để resolve schema
+    từ CSDL. `tkct-output-validator` sẽ báo các bảng sai số cột/thiếu thông tin.
+  </Accordion>
+  <Accordion title="Không kết nối được CSDL (kịch bản 7.4)">
+    Kiểm tra file `.env` môi trường, đảm bảo dùng user CSDL **chỉ đọc** và CSDL
+    đang chạy. Không paste thông tin kết nối trực tiếp vào prompt.
+  </Accordion>
+</AccordionGroup>
+
+## 9. Danh sách kiểm tra hoàn thành
+
+- [ ] Đã cài công cụ AI và đặt VTS TKCT Skills đúng thư mục
+- [ ] Đã chuẩn bị đầy đủ metadata, đối tượng dữ liệu và ảnh màn hình
+- [ ] Đã chọn đúng kịch bản (7.1–7.4) cho nhu cầu
+- [ ] File `.docx` xuất ra đúng cấu trúc 4 mục H6 cho mỗi chức năng
+- [ ] Bảng đặc tả, mapping CSDL và sơ đồ hiển thị đúng
+- [ ] Đã chạy `tkct-output-validator` và xử lý hết cảnh báo
+
+## 10. Trang liên quan
+
+- [Document Framework](/document-framework)
+- [Template](/reference/template)

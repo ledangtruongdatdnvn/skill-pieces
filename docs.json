@@ -1,42 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Document Framework",
-  "description": "A documentation framework built with Mintlify.",
+  "name": "VTS Skills",
+  "description": "Hướng dẫn sử dụng bộ VTS TKCT Skills để sinh tài liệu Thiết kế chi tiết bằng AI.",
   "colors": {
     "primary": "#2563EB"
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Overview",
-        "href": "/"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get started",
-      "href": "/document-framework"
-    }
-  },
   "navigation": {
-    "groups": [
-      {
-        "group": "Getting started",
-        "icon": "play",
-        "pages": [
-          "index",
-          "document-framework"
-        ]
-      },
-      {
-        "group": "Reference",
-        "icon": "book-open",
-        "pages": [
-          "reference/template"
-        ]
-      }
-    ]
+    "pages": ["vts-skills"]
   },
   "footer": {
     "socials": {}
