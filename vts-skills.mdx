@@ -55,18 +55,18 @@ Hiểu một cách đơn giản, **Claude**, **Codex**, **Antigravity** và **Cu
 
 ## 4. Khái niệm "Skill" là gì?
 
-Trong Agentic AI, **Skill (Kỹ năng)** là một bộ **công cụ** và **chỉ dẫn** được đóng gói sẵn để giải quyết một tác vụ cụ thể. Thay vì yêu cầu AI viết chung chung, ta cung cấp các Skill chuyên biệt:
+Trong Agentic AI, **Skill (Kỹ năng)** là một bộ **công cụ** và **chỉ dẫn** được đóng gói sẵn để giải quyết một tác vụ cụ thể:
 
 - **Chỉ dẫn nghiệp vụ:** AI phải viết theo văn phong nào, dùng từ ngữ gì.
-- **Tài liệu tham khảo:** Các template mẫu, quy chuẩn viết tài liệu (Style Guide).
+- **Tài liệu tham khảo:** Các template mẫu, quy chuẩn viết tài liệu.
 - **Công cụ tự động hóa:** Các đoạn mã giúp AI tự động tính toán, vẽ sơ đồ.
 
-### Cài đặt Skill: Project hay Global?
+**Cài đặt Skill: Project hay Global?**
 
 Mỗi Skill là một thư mục chứa file `SKILL.md` (chỉ dẫn) và các tài nguyên đi kèm. Có hai phạm vi cài đặt:
 
 - **Project (theo dự án):** Chỉ áp dụng cho dự án đó.
-- **Global (toàn máy):** Áp dụng cho mọi dự án trên máy.
+- **Global (toàn máy):** Áp dụng cho mọi dự án trên máy tính cá nhân.
 
 `SKILL.md` là chuẩn dùng chung — một skill viết cho Claude có thể dùng lại ở các công cụ khác mà không cần sửa. Chỉ khác nhau ở thư mục đặt skill:
 
@@ -78,44 +78,48 @@ Mỗi Skill là một thư mục chứa file `SKILL.md` (chỉ dẫn) và các t
 | **Cursor**      | `.cursor/skills/<tên-skill>/` | `~/.cursor/skills/<tên-skill>/`             |
 
 <Note>
-  **Thư mục dùng chung cho nhiều tool:** vì `SKILL.md` là chuẩn mở "Agent
-  Skills", nhiều công cụ (Codex, Cursor, Gemini CLI…) còn cùng đọc thư mục trung
-  lập `.agents/skills/` (project) và `~/.agents/skills/` (global). Đặt skill một
-  lần ở đây là dùng được cho nhiều tool, khỏi chép vào từng thư mục riêng. Ngoài
-  ra Cursor còn tự đọc luôn thư mục của Claude/Codex (`.claude/skills/`,
-  `.codex/skills/`, `~/.claude/skills/`, `~/.codex/skills/`).
+  **Mẹo đặt một lần dùng cho nhiều tool:** nhiều công cụ còn cùng đọc thư mục
+  trung lập `.agents/skills/` (project) và `~/.agents/skills/` (global), nên đặt
+  skill ở đây là khỏi chép vào từng thư mục riêng. Riêng Cursor còn tự đọc luôn
+  thư mục của Claude/Codex.
 </Note>
 
-### Cách mention (gọi) Skill cho từng công cụ
+**Cách mention (gọi) Skill cho từng công cụ**
 
-AI sẽ **tự kích hoạt** skill khi yêu cầu của bạn khớp mô tả skill. Để chắc chắn gọi đúng skill, hãy gọi tên skill trực tiếp trong prompt:
+AI sẽ **tự kích hoạt** skill khi yêu cầu của bạn khớp mô tả skill. Để chắc chắn Agent gọi đúng skill, hãy gọi tên skill trực tiếp trong prompt:
 
-| Công cụ         | Cách gọi skill thủ công                                                 |
-| --------------- | ----------------------------------------------------------------------- |
-| **Claude**      | Gõ `/tên-skill` (ví dụ `/tkct-docx`)                                    |
-| **Codex**       | Gõ `$tên-skill` (ví dụ `$tkct-docx`), hoặc dùng bộ chọn `/skills`       |
-| **Antigravity** | Nhắc tên skill trong prompt, hoặc chọn từ danh sách skill của workspace |
-| **Cursor**      | Nhắc tên skill trong chat (skill tự kích hoạt theo mô tả)               |
+| Công cụ         | Cách gọi skill thủ công                                     |
+| --------------- | ----------------------------------------------------------- |
+| **Claude**      | Gõ `/tên-skill` (ví dụ `/docx`)                             |
+| **Codex**       | Gõ `$tên-skill` (ví dụ `$docx`)                             |
+| **Antigravity** | Nhắc tên skill trong prompt (skill tự kích hoạt theo mô tả) |
+| **Cursor**      | Nhắc tên skill trong prompt (skill tự kích hoạt theo mô tả) |
 
 <Note>
   Ở Codex và Cursor, ký tự **`@`** dùng để chèn _file_ làm ngữ cảnh, **không
   phải** để gọi skill.
 </Note>
 
-## 5. Bộ 10 VTS TKCT Skills giải quyết việc gì?
+## 5. Bộ VTS Skills giải quyết việc gì?
 
-Vai trò của từng Skill:
+Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều loại tài liệu) và **skill TKCT chuyên dụng** (đặc thù cho tài liệu thiết kế chi tiết).
 
-1. **`tkct-docx` (Kỹ sư Word):** Can thiệp trực tiếp vào lõi XML của file Word (giải nén ZIP, thao tác trên các file `document.xml`, `styles.xml`, `comments.xml` và thư mục `media/`) để chỉnh sửa, định dạng cấu trúc và đóng gói thành file `.docx`. Đặc biệt, khi được mention trên các công cụ soạn thảo (Claude, Codex), skill này có khả năng đọc bất kỳ file Word nào và viết nội dung mới kế thừa chính xác style định dạng của file Word đó.
-2. **`tkct-document-builder` (Người điều phối):** Đóng vai trò người điều phối quy trình sinh tài liệu hoàn chỉnh. Skill này thu thập metadata, khởi tạo tài liệu từ một file Word mẫu (style donor) để kế thừa định dạng chuẩn, sau đó tự động kích hoạt và phối hợp tuần tự các skill thành phần khác để tạo tài liệu thiết kế chi tiết hoàn chỉnh.
-3. **`tkct-section-assembler` (Người lắp ráp):** Đảm nhận việc dựng cấu trúc chi tiết cho từng màn hình chức năng. Skill này tự động phân chia và sắp xếp nội dung theo đúng cấu trúc tiêu chuẩn gồm 4 mục chính (Thông tin chung, Thiết kế màn hình, Mô tả chi tiết các thành phần/trường thông tin, và Luồng nghiệp vụ tương ứng), đảm bảo tính nhất quán giữa tất cả các màn hình trong tài liệu.
-4. **`tkct-style-guide` (Người canh chuẩn định dạng):** Đóng vai trò giám sát quy chuẩn trình bày. Skill này tự động áp dụng các bộ quy tắc định dạng của Viettel (như font chữ Arial, cỡ chữ tiêu chuẩn cho từng cấp Heading, khoảng cách dòng, căn lề, màu sắc chủ đạo và cách đánh số mục tự động) để tài liệu xuất ra luôn chuyên nghiệp và đồng bộ mà không cần chỉnh sửa thủ công.
-5. **`tkct-field-table-generator` (Người vẽ bảng đặc tả):** Tự động hóa việc sinh bảng đặc tả giao diện chi tiết. Từ danh sách trường hoặc mô tả giao diện thô, skill này tự động sinh ra bảng mô tả chuẩn 6 cột (STT, Tên trường dữ liệu, Kiểu hiển thị, Trạng thái Input/Output, Giá trị mặc định, Mô tả nghiệp vụ & Mapping CSDL), giúp loại bỏ hoàn toàn việc kẻ bảng và điền dữ liệu thủ công.
-6. **`tkct-data-governance` (Người quản trị dữ liệu):** Đảm bảo tính chính xác và nhất quán của dữ liệu hệ thống. Skill này phân tích cấu trúc bảng (schema), các mối quan hệ khóa ngoại (foreign key) và định nghĩa các quy tắc ràng buộc dữ liệu (data constraints). Từ đó, tự động sinh phần đặc tả quản trị dữ liệu phục vụ cho lập trình viên và kiểm thử viên.
-7. **`tkct-workflow-writer` (Người viết luồng):** Chuyển hóa logic nghiệp vụ phức tạp thành các bước xử lý cụ thể, rõ ràng. Skill này tự động mô tả chi tiết các luồng xử lý (luồng chuẩn - Happy Path, luồng rẽ nhánh, luồng xử lý lỗi) cho các tác vụ như Thêm mới, Sửa, Xóa, Phê duyệt... giúp giảm thiểu hiểu lầm giữa BA và Lập trình viên.
-8. **`tkct-flowchart-generator` (Người vẽ lưu đồ):** Tự động chuyển đổi các mô tả luồng nghiệp vụ dạng văn bản thành lưu đồ (Flowchart), sau đó biên dịch thành hình ảnh để chèn trực tiếp vào tài liệu Word tại đúng mục tương ứng.
-9. **`tkct-context-diagram` (Người vẽ sơ đồ ngữ cảnh):** Vẽ sơ đồ ngữ cảnh (Context Diagram) mô tả bức tranh tổng quan về luồng trao đổi thông tin. Skill này trực quan hóa các mối quan hệ tương tác giữa Người dùng (Actor), Giao diện hệ thống (UI Frontend), Nghiệp vụ xử lý (Backend API) và Cơ sở dữ liệu (Database) để người đọc dễ dàng hình dung kiến trúc chức năng.
-10. **`tkct-output-validator` (Người kiểm soát chất lượng):** Trước khi xuất file `.docx`, skill này tự động rà soát toàn bộ nội dung tài liệu để phát hiện các lỗi phổ biến (như thiếu mục bắt buộc, bảng đặc tả sai số cột/thiếu thông tin, sai định dạng style, hoặc các liên kết sơ đồ bị lỗi), đảm bảo tài liệu đầu ra đạt độ hoàn thiện cao nhất.
+**Skill dùng chung**
+
+1. **`docx`:** Thao tác trực tiếp lõi XML của file Word (`document.xml`, `styles.xml`, `comments.xml`, thư mục `media/`) để chỉnh sửa, định dạng và đóng gói thành `.docx`. Đọc được mọi file Word và viết nội dung mới kế thừa đúng style của file đó.
+2. **`drawio`:** Tạo, chỉnh sửa, xuất sơ đồ Draw.io qua quy trình YAML offline. Xuất ra ảnh để chèn tài liệu hoặc file `.drawio` để chỉnh tay.
+
+**Skill TKCT chuyên dụng**
+
+1. **`tkct-document-builder`:** Điều phối toàn bộ quy trình sinh tài liệu: thu thập metadata, khởi tạo từ file Word mẫu (style donor) để kế thừa định dạng chuẩn, rồi gọi tuần tự các skill thành phần để tạo tài liệu hoàn chỉnh.
+2. **`tkct-section-assembler`:** Dựng cấu trúc chi tiết cho từng màn hình chức năng theo 4 mục chuẩn (Thông tin chung, Thiết kế màn hình, Mô tả chi tiết thành phần, Luồng nghiệp vụ), đảm bảo nhất quán giữa các màn hình.
+3. **`tkct-style-guide`:** Tự động áp quy chuẩn định dạng Viettel (font Arial, cỡ chữ theo cấp heading, khoảng cách dòng, căn lề, màu chủ đạo, đánh số mục) để tài liệu luôn chuyên nghiệp, đồng bộ.
+4. **`tkct-field-table-generator`:** Từ danh sách trường hoặc mô tả giao diện thô, tự sinh bảng đặc tả chuẩn 6 cột (STT, Tên trường, Kiểu hiển thị, Input/Output, Giá trị mặc định, Mô tả nghiệp vụ & Mapping CSDL).
+5. **`tkct-data-governance`:** Phân tích schema bảng, khóa ngoại và ràng buộc dữ liệu để sinh phần đặc tả quản trị dữ liệu.
+6. **`tkct-workflow-writer`:** Mô tả chi tiết các luồng xử lý (happy path, rẽ nhánh, xử lý lỗi) cho các tác vụ Thêm/Sửa/Xóa/Phê duyệt,...
+7. **`tkct-flowchart-generator`:** Chuyển mô tả luồng nghiệp vụ dạng văn bản thành lưu đồ (Flowchart) rồi biên dịch ra ảnh, chèn vào đúng mục trong tài liệu Word.
+8. **`tkct-context-diagram`:** Vẽ sơ đồ ngữ cảnh (Context Diagram) trực quan hóa tương tác giữa Actor, UI Frontend, Backend API và Database để dễ hình dung kiến trúc chức năng.
+9. **`tkct-output-validator`:** Trước khi xuất `.docx`, tự rà soát toàn bộ tài liệu để phát hiện lỗi phổ biến (thiếu mục bắt buộc, bảng sai số cột/thiếu thông tin, sai style, liên kết sơ đồ lỗi).
 
 ## 6. Quy trình sử dụng cơ bản
 
@@ -129,7 +133,7 @@ Vai trò của từng Skill:
     danh sách trường (hoặc thông tin kết nối CSDL), và ảnh màn hình.
   </Step>
   <Step title="Chọn kịch bản và ra lệnh">
-    Chọn 1 trong 4 kịch bản ở mục 7, mention các skill cần dùng (`[Tkct Docx]`,
+    Chọn 1 trong 4 kịch bản ở mục 7, mention các skill cần dùng (`[Docx]`,
     `[Tkct Document Builder]`…) và dán prompt kèm dữ liệu.
   </Step>
   <Step title="Nhận và kiểm tra file .docx">
@@ -152,7 +156,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
     ## Prompt
 
-    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu với các thông tin sau:
+    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu với các thông tin sau:
 
     ### Thông tin tài liệu
 
@@ -246,7 +250,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
     ## Prompt
 
-    Tôi cần tạo đầy đủ nội dung cho đối tượng dữ liệu **Bến phà đường bộ** trong tài liệu TKCT, bao gồm cả section Sửa và Xóa. Hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
+    Tôi cần tạo đầy đủ nội dung cho đối tượng dữ liệu **Bến phà đường bộ** trong tài liệu TKCT, bao gồm cả section Sửa và Xóa. Hãy sử dụng [Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
 
     **Thông tin đối tượng:**
 
@@ -318,7 +322,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
     ## Prompt
 
-    Tôi cần tạo section **Sửa** cho đối tượng dữ liệu **Nút giao đường bộ** trong tài liệu TKCT. Hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
+    Tôi cần tạo section **Sửa** cho đối tượng dữ liệu **Nút giao đường bộ** trong tài liệu TKCT. Hãy sử dụng [Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để bổ sung.
 
     **Thông tin đối tượng:**
 
@@ -380,7 +384,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
     ## Prompt
 
-    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Tkct Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu.
+    Tôi cần tạo tài liệu TKCT hoàn chỉnh, hãy sử dụng [Docx] + [Tkct Document Builder] và tất cả các skill liên quan đến thiết kế chi tiết để tạo tài liệu.
 
     ### Danh sách đối tượng dữ liệu
 
@@ -443,8 +447,8 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
     đúng thư mục Project/Global chưa.
   </Accordion>
   <Accordion title="File .docx sai định dạng / font">
-    Đảm bảo có mention `tkct-docx` và `tkct-style-guide`, và khởi tạo tài liệu
-    từ file Word mẫu (style donor) để kế thừa định dạng chuẩn Viettel.
+    Đảm bảo có mention `docx` và `tkct-style-guide`, và khởi tạo tài liệu từ
+    file Word mẫu (style donor) để kế thừa định dạng chuẩn Viettel.
   </Accordion>
   <Accordion title="Bảng đặc tả thiếu cột hoặc thiếu trường">
     Cung cấp đầy đủ danh sách trường, hoặc dùng kịch bản 7.4 để resolve schema
