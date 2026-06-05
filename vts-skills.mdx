@@ -305,7 +305,7 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
 Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài liệu theo nhu cầu.
 
 <AccordionGroup>
-  <Accordion title="7.1. Full Document — Sinh tài liệu hoàn chỉnh">
+  <Accordion title="7.1. Sinh tài liệu hoàn chỉnh">
     - **Khi nào dùng:** Cần tạo mới toàn bộ tài liệu TKCT cho một phân hệ từ con số 0.
     - **Cách dùng:** Điền thông tin chung (tên tài liệu, phân hệ, giới thiệu dự án, danh sách các đối tượng dữ liệu). AI sẽ tự động sinh toàn bộ trang bìa, changelog, trang ký tên và tất cả các mục chức năng chi tiết trong một file Word duy nhất.
 
@@ -399,7 +399,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
   </Accordion>
 
-  <Accordion title="7.2. Data Object — Sinh nội dung cho một đối tượng">
+  <Accordion title="7.2. Sinh nội dung cho một đối tượng">
     - **Khi nào dùng:** Tài liệu đã có sẵn, bạn chỉ muốn tạo thêm chi tiết cho một đối tượng dữ liệu (gồm cả hai chức năng **Sửa** và **Xóa**).
     - **Cách dùng:** Cung cấp thông tin đối tượng (ví dụ: _Bến phà đường bộ_) và danh sách trường. AI sẽ tạo đầy đủ sơ đồ ngữ cảnh, sơ đồ quy trình, bảng đặc tả trường UI và các bước nghiệp vụ cho cả 2 chức năng Sửa/Xóa.
 
@@ -471,7 +471,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
   </Accordion>
 
-  <Accordion title="7.3. Section — Sinh một chức năng đơn lẻ">
+  <Accordion title="7.3. Sinh một chức năng đơn lẻ">
     - **Khi nào dùng:** Chỉ muốn viết thiết kế chi tiết cho một chức năng duy nhất (chỉ riêng Sửa hoặc chỉ riêng Xóa) để bổ sung vào tài liệu.
     - **Cách dùng:** Khai báo đối tượng và chọn loại thao tác. AI sẽ sinh đúng cấu trúc 4 mục H6 tiêu chuẩn của riêng chức năng đó.
 
@@ -533,7 +533,7 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
 
   </Accordion>
 
-  <Accordion title="7.4. Full Document from DB — Sinh tài liệu tự động từ CSDL">
+  <Accordion title="7.4. Sinh tài liệu tự động từ CSDL">
     - **Khi nào dùng:** Trường hợp bạn **không có danh sách trường** và không muốn nhập thủ công.
     - **Cách dùng:** Cung cấp thông tin kết nối CSDL và danh sách các bảng (ví dụ: `T_TuyenDuongBo`). AI sẽ tự động kết nối vào DB (quyền chỉ đọc), đọc cấu trúc bảng, xác định loại dữ liệu (Textbox, Combobox, Datepicker...) và tự động điền bảng đặc tả trường cho tài liệu.
 
