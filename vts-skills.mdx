@@ -602,7 +602,9 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
   <Accordion title="AI không kích hoạt đúng skill">
     Gọi tên skill trực tiếp trong prompt theo cú pháp của từng công cụ
     (`/tên-skill` cho Claude, `$tên-skill` cho Codex). Kiểm tra skill đã nằm
-    đúng thư mục Project/Global chưa.
+    đúng thư mục Project/Global chưa. Công cụ chỉ quét thư mục skill khi khởi
+    động, nên đôi khi cần **tắt và mở lại Codex (hoặc Claude)** để hệ thống nạp
+    lại các skill vừa cài.
   </Accordion>
   <Accordion title="File .docx sai định dạng / font">
     Đảm bảo có mention `docx` và `tkct-style-guide`, và khởi tạo tài liệu từ
