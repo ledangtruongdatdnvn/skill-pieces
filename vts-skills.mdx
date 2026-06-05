@@ -618,6 +618,13 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
     dần Agent sẽ bám theo đúng phong cách tài liệu của bạn.
 
   </Accordion>
+  <Accordion title="Sơ đồ vẽ ra chưa chuẩn">
+    Nếu sơ đồ Agent sinh ra chưa căn chỉnh đúng format chuẩn, hãy bỏ file
+    `template.drawio` (sơ đồ mẫu mà bạn cho là đúng) vào thư mục làm việc, rồi
+    yêu cầu Agent dùng skill `drawio` **phân tích sơ đồ mẫu đó và vẽ lại tương
+    tự**. Agent sẽ bám theo bố cục, style và quy ước của file mẫu thay vì tự suy
+    diễn.
+  </Accordion>
   <Accordion title="Không kết nối được CSDL">
     Trước tiên, tự kiểm tra máy tính có kết nối được CSDL hay không bằng một
     công cụ khác (MySQL Workbench, DBeaver, `mysql` CLI…) với đúng thông tin
