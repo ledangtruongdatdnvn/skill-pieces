@@ -131,6 +131,7 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
 
     Nếu muốn thử nghiệm, tải thêm `PTYC.zip` và `TKCT.zip` trong cùng folder
     Google Drive.
+
   </Step>
   <Step title="Cài đặt Skills vào máy">
     Mở terminal **ngay trong thư mục chứa file `vts-skills.zip` vừa tải về**
@@ -169,6 +170,7 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
     ```
 
     Xong. Mở lại agent là dùng được các skill.
+
   </Step>
   <Step title="Chuẩn bị đầu vào">
     Tạo một thư mục đầu vào theo đúng cấu trúc của 2 bộ thử nghiệm `PTYC.zip` và
@@ -227,6 +229,7 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
       AI **"follow rules.txt trước"** — AI sẽ ưu tiên luật của bạn thay vì mặc
       định của skill.
     </Note>
+
   </Step>
   <Step title="Mở project trong Codex và kiểm tra Skills">
     Mở thư mục đầu vào (chuẩn bị ở Bước 3) như một project trong Codex, rồi xác
@@ -269,14 +272,31 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
       chưa xuất hiện, hãy **khởi động lại Codex** để hệ thống nạp lại các skill
       vừa cài, sau đó kiểm tra lại.
     </Tip>
+
   </Step>
-  <Step title="Chọn kịch bản và ra lệnh">
-    Chọn 1 trong 4 kịch bản ở mục 7, mention các skill cần dùng (`[Docx]`,
-    `[Tkct Document Builder]`…) và dán prompt kèm dữ liệu.
+  <Step title="Ra lệnh cho AI">
+    Ngay trong khung chat của project Codex vừa mở ở Bước trước, mở `prompt.rtf`
+    để tinh chỉnh prompt cho khớp dữ liệu của bạn, rồi dán vào khung chat. Trong
+    prompt nhớ mention các skill cần dùng (`Docx`, `Drawio`, `Tkct Document
+    Builder`…) và đính kèm các file liên quan (`template.docx`,
+    `template.drawio`). Gửi lệnh và chờ AI xử lý.
+
+    <Frame>
+      <img src="/images/vts-skills/codex-run/paste-prompt.png" alt="Dán prompt kèm skill và file vào khung chat Codex" />
+    </Frame>
+
   </Step>
   <Step title="Nhận và kiểm tra file .docx">
-    AI sinh file Word hoàn chỉnh. `tkct-output-validator` tự rà soát; bạn mở
-    file để đối chiếu nội dung và định dạng.
+    AI sinh ra file Word hoàn chỉnh (ví dụ `template_..._updated.docx`) cùng các
+    script tạo tài liệu. `tkct-output-validator` tự rà soát trước khi xuất.
+
+    <Frame>
+      <img src="/images/vts-skills/codex-run/output-result.png" alt="Kết quả AI trả về: file .docx và script sinh tài liệu" />
+    </Frame>
+
+    Bấm **Open in** để mở file `.docx`, đối chiếu nội dung và định dạng với yêu
+    cầu. Nếu cần chỉnh, mô tả thay đổi ngay trong cùng khung chat để AI sinh lại.
+
   </Step>
 </Steps>
 
@@ -597,4 +617,3 @@ Bạn có thể dùng các file mẫu prompt để ra lệnh cho AI sinh tài li
     đang chạy. Không paste thông tin kết nối trực tiếp vào prompt.
   </Accordion>
 </AccordionGroup>
-
