@@ -124,14 +124,39 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
 ## 6. Quy trình sử dụng cơ bản
 
 <Steps>
-  <Step title="Cài đặt công cụ AI và Skills">
+  <Step title="Cài đặt công cụ AI và tải Skills">
     Cài đặt một trong các công cụ AI (Claude, Codex, Antigravity, Cursor) theo
     hướng dẫn ở [mục 3](#3-công-cụ-ai-trong-hệ-thống). Sau đó tải bộ Skill
-    `vts-skills.zip` từ [Google Drive](https://drive.google.com/drive/folders/1T5pgFYdxJzSj08TRWDm23ASMk0H5uvXI?usp=sharing),
-    giải nén và đặt vào thư mục skill tương ứng (Project hoặc Global) như mục 4.
+    `vts-skills.zip` từ [Google Drive](https://drive.google.com/drive/folders/1T5pgFYdxJzSj08TRWDm23ASMk0H5uvXI?usp=sharing).
 
     Nếu muốn thử nghiệm, tải thêm `PTYC.zip` và `TKCT.zip` trong cùng folder
     Google Drive.
+  </Step>
+  <Step title="Cài đặt Skills vào máy">
+    Giải nén và chạy lệnh cài đặt khớp với hệ điều hành của bạn — các skill sẽ
+    được copy vào `~/.agents/skills` (thư mục trung lập mà nhiều công cụ cùng
+    đọc, xem mục 4):
+
+    <CodeGroup>
+
+    ```bash Mac / Linux
+    unzip -o vts-skills.zip -d vts-skills && sh vts-skills/install.sh
+    ```
+
+    ```powershell Windows (PowerShell)
+    Expand-Archive -Force vts-skills.zip vts-skills; ./vts-skills/install.ps1
+    ```
+
+    </CodeGroup>
+
+    Muốn cài vào thư mục khác (ví dụ chỉ cho Claude), đặt biến `SKILLS_DEST`
+    trước khi chạy:
+
+    ```bash
+    SKILLS_DEST=~/.claude/skills sh vts-skills/install.sh
+    ```
+
+    Xong. Mở lại agent là dùng được các skill.
   </Step>
   <Step title="Chuẩn bị đầu vào">
     Tập hợp thông tin tài liệu (metadata, phân hệ), danh sách đối tượng dữ liệu,
