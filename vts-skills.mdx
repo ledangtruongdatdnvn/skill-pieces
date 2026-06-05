@@ -171,8 +171,62 @@ Bộ skill gồm hai nhóm: **skill dùng chung** (tái sử dụng cho nhiều 
     Xong. Mở lại agent là dùng được các skill.
   </Step>
   <Step title="Chuẩn bị đầu vào">
-    Tập hợp thông tin tài liệu (metadata, phân hệ), danh sách đối tượng dữ liệu,
-    danh sách trường (hoặc thông tin kết nối CSDL), và ảnh màn hình.
+    Tạo một thư mục đầu vào theo đúng cấu trúc của 2 bộ thử nghiệm `PTYC.zip` và
+    `TKCT.zip` (tải ở Bước 1). Mỗi bộ là một thư mục gồm các file sau:
+
+    <Tabs>
+      <Tab title="TKCT (có kết nối CSDL)">
+        ```text
+        TKCT/                    # thư mục đầu vào của bạn
+        ├── prompt.rtf           # nội dung prompt ra lệnh cho AI
+        ├── rules.txt            # (tùy chọn) luật ghi đè mặc định của skill
+        ├── template.docx        # file Word mẫu (style donor) để kế thừa định dạng
+        ├── template.drawio      # sơ đồ mẫu để AI tham khảo
+        ├── screens/             # ảnh chụp màn hình các chức năng
+        │   ├── DanhSachPhongBan.png
+        │   ├── ThemMoiPhongBan.png
+        │   ├── SuaPhongBan.png
+        │   └── XoaPhongBan.png
+        └── env                  # thông tin kết nối CSDL để AI tự đọc schema
+        ```
+      </Tab>
+      <Tab title="PTYC (không kết nối CSDL)">
+        ```text
+        PTYC/                    # thư mục đầu vào của bạn
+        ├── prompt.rtf           # nội dung prompt ra lệnh cho AI
+        ├── rules.txt            # (tùy chọn) luật ghi đè mặc định của skill
+        ├── template.docx        # file Word mẫu (style donor) để kế thừa định dạng
+        ├── template.drawio      # sơ đồ mẫu để AI tham khảo
+        └── screens/             # ảnh chụp màn hình các chức năng
+            ├── ClientList.png
+            ├── ClientDetail.png
+            └── DanhSachPhongBan.png
+        ```
+      </Tab>
+    </Tabs>
+
+    Giải nén `PTYC.zip` hoặc `TKCT.zip` để xem mẫu thật, rồi thay
+    `template.docx`, ảnh trong `screens/` và nội dung `prompt.rtf` bằng dữ liệu
+    của bạn. File `env` chỉ cần khi muốn AI kết nối CSDL để lấy danh sách trường
+    (như bộ TKCT); nếu không, mô tả trực tiếp danh sách trường trong prompt (như
+    bộ PTYC).
+
+    <Note>
+      `prompt.rtf` chỉ là định dạng văn bản thường thấy của trình soạn thảo
+      (TextEdit trên Mac) — trên Windows bạn có thể tạo file `.txt` bằng
+      Notepad cũng được, nội dung như nhau. File này chứa **prompt mẫu**: bạn
+      mở ra, tinh chỉnh (find-tune) lại cho khớp dữ liệu của mình, rồi copy và
+      dán vào khung chat của công cụ AI để ra lệnh.
+    </Note>
+
+    <Note>
+      `rules.txt` (hoặc `rules.rtf`) là file **luật ghi đè** tùy chọn. Bộ TKCT
+      Skills có sẵn một số quy chuẩn mặc định (ví dụ font **Arial**), nhưng đôi
+      khi `template.docx` của bạn lại dùng font khác (ví dụ **Times New
+      Roman**). Khi đó, ghi luật riêng vào `rules.txt`, rồi trong prompt nhắc
+      AI **"follow rules.txt trước"** — AI sẽ ưu tiên luật của bạn thay vì mặc
+      định của skill.
+    </Note>
   </Step>
   <Step title="Chọn kịch bản và ra lệnh">
     Chọn 1 trong 4 kịch bản ở mục 7, mention các skill cần dùng (`[Docx]`,
