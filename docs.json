@@ -7,7 +7,7 @@
     "primary": "#2563EB"
   },
   "navigation": {
-    "pages": ["vts-skills"]
+    "pages": ["vts-skills", "agents-skill-components"]
   },
   "footer": {
     "socials": {}

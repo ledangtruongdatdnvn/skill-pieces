@@ -1,0 +1,92 @@
+---
+title: "Thành phần của Skill"
+description: "Tổng quan cấu trúc file và nội dung nên có trong một skill"
+---
+
+**1. Cấu trúc file**
+
+```text
+skill-name/
+├── SKILL.md              # bắt buộc
+├── scripts/              # tùy chọn: mã chạy được
+├── references/           # tùy chọn: tài liệu chi tiết
+└── assets/               # tùy chọn: mẫu, ảnh, font, file mẫu
+```
+
+Trong đó `SKILL.md` là phần quan trọng nhất, gồm:
+
+```markdown
+---
+name: example-skill
+description: Khi nào agent nên dùng skill này
+---
+
+# Tên skill
+
+Phần Markdown hướng dẫn agent làm việc.
+```
+
+**2. Nội dung nên có trong `SKILL.md`**
+
+- **[Nên có] Mục đích / phạm vi**: skill này dùng để làm gì, không dùng để làm gì.
+- **[Nên có] Khi nào dùng**: điều kiện kích hoạt rõ ràng để agent biết khi nào cần dùng.
+- **[Nên có] Đầu vào cần có**: user cần cung cấp gì, agent nên tự suy luận gì.
+- **[Nên có] Quy tắc / ràng buộc**: nguyên tắc bắt buộc, điều cấm, tiêu chuẩn chất lượng.
+- **[Nên có] Quy trình**: các bước làm việc chính.
+- **[Tùy chọn] Cách dùng công cụ**: dùng tool/script/reference nào, khi nào dùng.
+- **[Nên có] Định dạng đầu ra**: kết quả cuối nên trả về dạng gì.
+- **[Nên có] Kiểm tra / danh sách rà soát**: cách kiểm tra trước khi hoàn tất.
+- **[Tùy chọn] Ví dụ**: ví dụ ngắn, đại diện cho tình huống khó hoặc dễ nhầm.
+- **[Tùy chọn] Xử lý lỗi**: nếu thiếu dữ liệu, lỗi công cụ, hoặc đầu vào chưa rõ thì xử lý sao.
+
+```markdown
+---
+name: example-skill
+description: Khi nào agent nên dùng skill này
+---
+
+# Tên skill
+
+## Mục đích
+
+...
+
+## Khi nào dùng
+
+...
+
+## Đầu vào
+
+...
+
+## Quy tắc
+
+...
+
+## Quy trình
+
+1. ...
+2. ...
+3. ...
+
+## Công cụ và tài nguyên
+
+- Dùng `scripts/...` khi ...
+- Đọc `references/...` khi ...
+
+## Đầu ra
+
+...
+
+## Kiểm tra
+
+...
+
+## Ví dụ
+
+...
+
+## Xử lý lỗi
+
+...
+```
